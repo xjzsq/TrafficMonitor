@@ -25,7 +25,7 @@
 
 namespace
 {
-    // Constant to represent empty display item array in ini file
+    // 用于表示ini文件中空的显示项数组的常量
     const int EMPTY_DISPLAY_ITEM_VALUE = -1;
 }
 
@@ -187,7 +187,7 @@ void CTrafficMonitorApp::LoadConfig()
     int tbar_display_value = ini.GetInt(L"task_bar", L"tbar_display_item", DisplayItemSet{ TDI_UP, TDI_DOWN }.ToInt());
     if (tbar_display_value == EMPTY_DISPLAY_ITEM_VALUE)
     {
-        // EMPTY_DISPLAY_ITEM_VALUE means empty array
+        // EMPTY_DISPLAY_ITEM_VALUE表示空数组
         m_taskbar_data.display_item.FromInt(0);
     }
     else
@@ -395,7 +395,7 @@ void CTrafficMonitorApp::SaveConfig()
     ini.SaveTaskbarWndColors(L"task_bar", L"task_bar_text_color", m_taskbar_data.text_colors);
     ini.WriteBool(L"task_bar", L"specify_each_item_color", m_taskbar_data.specify_each_item_color);
     //ini.WriteBool(L"task_bar", L"task_bar_show_cpu_memory", m_cfg_data.m_tbar_show_cpu_memory);
-    // Write EMPTY_DISPLAY_ITEM_VALUE to represent empty array when display_item is empty
+    // display_item为空时写入EMPTY_DISPLAY_ITEM_VALUE表示空数组
     int tbar_display_value = m_taskbar_data.display_item.IsEmpty() ? EMPTY_DISPLAY_ITEM_VALUE : m_taskbar_data.display_item.ToInt();
     ini.WriteInt(L"task_bar", L"tbar_display_item", tbar_display_value);
     ini.SaveFontData(L"task_bar", m_taskbar_data.font);
