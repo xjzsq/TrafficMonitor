@@ -26,6 +26,7 @@
 namespace
 {
     // 用于表示ini文件中空的显示项数组的常量
+    // 使用-1是因为DisplayItemSet::ToInt()返回的值总是>=0，-1可以安全地表示空数组
     const int EMPTY_DISPLAY_ITEM_VALUE = -1;
 }
 
@@ -187,7 +188,7 @@ void CTrafficMonitorApp::LoadConfig()
     int tbar_display_value = ini.GetInt(L"task_bar", L"tbar_display_item", DisplayItemSet{ TDI_UP, TDI_DOWN }.ToInt());
     if (tbar_display_value == EMPTY_DISPLAY_ITEM_VALUE)
     {
-        // EMPTY_DISPLAY_ITEM_VALUE表示空数组
+        // EMPTY_DISPLAY_ITEM_VALUE表示空数组，传入0给FromInt将创建一个空的DisplayItemSet
         m_taskbar_data.display_item.FromInt(0);
     }
     else
