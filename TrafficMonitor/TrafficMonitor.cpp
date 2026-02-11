@@ -23,8 +23,11 @@
 #define new DEBUG_NEW
 #endif
 
-// Constant to represent empty display item array in ini file
-const int EMPTY_DISPLAY_ITEM_VALUE = -1;
+namespace
+{
+    // Constant to represent empty display item array in ini file
+    const int EMPTY_DISPLAY_ITEM_VALUE = -1;
+}
 
 
 // CTrafficMonitorApp
