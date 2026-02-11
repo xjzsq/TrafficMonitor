@@ -23,6 +23,9 @@
 #define new DEBUG_NEW
 #endif
 
+// Constant to represent empty display item array in ini file
+const int EMPTY_DISPLAY_ITEM_VALUE = -1;
+
 
 // CTrafficMonitorApp
 
@@ -179,9 +182,9 @@ void CTrafficMonitorApp::LoadConfig()
     m_taskbar_data.specify_each_item_color = ini.GetBool(L"task_bar", L"specify_each_item_color", false);
     //m_cfg_data.m_tbar_show_cpu_memory = ini.GetBool(_T("task_bar"), _T("task_bar_show_cpu_memory"), false);
     int tbar_display_value = ini.GetInt(L"task_bar", L"tbar_display_item", DisplayItemSet{ TDI_UP, TDI_DOWN }.ToInt());
-    if (tbar_display_value == -1)
+    if (tbar_display_value == EMPTY_DISPLAY_ITEM_VALUE)
     {
-        // -1 means empty array
+        // EMPTY_DISPLAY_ITEM_VALUE means empty array
         m_taskbar_data.display_item.FromInt(0);
     }
     else
@@ -389,8 +392,8 @@ void CTrafficMonitorApp::SaveConfig()
     ini.SaveTaskbarWndColors(L"task_bar", L"task_bar_text_color", m_taskbar_data.text_colors);
     ini.WriteBool(L"task_bar", L"specify_each_item_color", m_taskbar_data.specify_each_item_color);
     //ini.WriteBool(L"task_bar", L"task_bar_show_cpu_memory", m_cfg_data.m_tbar_show_cpu_memory);
-    // Write -1 to represent empty array when display_item is empty
-    int tbar_display_value = m_taskbar_data.display_item.IsEmpty() ? -1 : m_taskbar_data.display_item.ToInt();
+    // Write EMPTY_DISPLAY_ITEM_VALUE to represent empty array when display_item is empty
+    int tbar_display_value = m_taskbar_data.display_item.IsEmpty() ? EMPTY_DISPLAY_ITEM_VALUE : m_taskbar_data.display_item.ToInt();
     ini.WriteInt(L"task_bar", L"tbar_display_item", tbar_display_value);
     ini.SaveFontData(L"task_bar", m_taskbar_data.font);
     //ini.WriteBool(L"task_bar", L"task_bar_swap_up_down", m_taskbar_data.swap_up_down);
