@@ -812,8 +812,7 @@ void CTaskBarDlg::ApplySettings()
 void CTaskBarDlg::CalculateWindowSize()
 {
     bool horizontal_arrange = theApp.m_taskbar_data.horizontal_arrange && m_taskbar_on_top_or_bottom;
-    // Only add a default item if both display_item and plugin_display_item are empty
-    // Allow taskbar to be empty if plugin items exist
+    // 只有当display_item和plugin_display_item都为空时才添加默认项，允许在存在plugin项时taskbar为空
     if (theApp.m_taskbar_data.display_item.IsEmpty() && theApp.m_taskbar_data.plugin_display_item.data().empty())
         theApp.m_taskbar_data.display_item.Add(TDI_UP);        //至少显示一项
 
