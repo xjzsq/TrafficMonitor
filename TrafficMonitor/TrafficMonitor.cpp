@@ -23,6 +23,13 @@
 #define new DEBUG_NEW
 #endif
 
+namespace
+{
+    // 用于表示ini文件中空的显示项数组的常量
+    // 使用-1是因为DisplayItemSet::ToInt()返回的值总是>=0，-1可以安全地表示空数组
+    const int EMPTY_DISPLAY_ITEM_VALUE = -1;
+}
+
 
 // CTrafficMonitorApp
 
@@ -178,7 +185,16 @@ void CTrafficMonitorApp::LoadConfig()
     ini.LoadTaskbarWndColors(_T("task_bar"), _T("task_bar_text_color"), m_taskbar_data.text_colors, m_taskbar_data.dft_text_colors);
     m_taskbar_data.specify_each_item_color = ini.GetBool(L"task_bar", L"specify_each_item_color", false);
     //m_cfg_data.m_tbar_show_cpu_memory = ini.GetBool(_T("task_bar"), _T("task_bar_show_cpu_memory"), false);
-    m_taskbar_data.display_item.FromInt(ini.GetInt(L"task_bar", L"tbar_display_item", DisplayItemSet{ TDI_UP, TDI_DOWN }.ToInt()));
+    int tbar_display_value = ini.GetInt(L"task_bar", L"tbar_display_item", DisplayItemSet{ TDI_UP, TDI_DOWN }.ToInt());
+    if (tbar_display_value == EMPTY_DISPLAY_ITEM_VALUE)
+    {
+        // EMPTY_DISPLAY_ITEM_VALUE表示空数组，传入0给FromInt将创建一个空的DisplayItemSet
+        m_taskbar_data.display_item.FromInt(0);
+    }
+    else
+    {
+        m_taskbar_data.display_item.FromInt(tbar_display_value);
+    }
     m_taskbar_data.show_taskbar_wnd_in_secondary_display = ini.GetBool(L"task_bar", L"show_taskbar_wnd_in_secondary_display", false);
     m_taskbar_data.secondary_display_index = ini.GetInt(L"task_bar", L"secondary_display_index", 0);
 
@@ -380,7 +396,9 @@ void CTrafficMonitorApp::SaveConfig()
     ini.SaveTaskbarWndColors(L"task_bar", L"task_bar_text_color", m_taskbar_data.text_colors);
     ini.WriteBool(L"task_bar", L"specify_each_item_color", m_taskbar_data.specify_each_item_color);
     //ini.WriteBool(L"task_bar", L"task_bar_show_cpu_memory", m_cfg_data.m_tbar_show_cpu_memory);
-    ini.WriteInt(L"task_bar", L"tbar_display_item", m_taskbar_data.display_item.ToInt());
+    // display_item为空时写入EMPTY_DISPLAY_ITEM_VALUE表示空数组
+    int tbar_display_value = m_taskbar_data.display_item.IsEmpty() ? EMPTY_DISPLAY_ITEM_VALUE : m_taskbar_data.display_item.ToInt();
+    ini.WriteInt(L"task_bar", L"tbar_display_item", tbar_display_value);
     ini.SaveFontData(L"task_bar", m_taskbar_data.font);
     //ini.WriteBool(L"task_bar", L"task_bar_swap_up_down", m_taskbar_data.swap_up_down);
     ini.WriteBool(L"task_bar", L"show_taskbar_wnd_in_secondary_display", m_taskbar_data.show_taskbar_wnd_in_secondary_display);
